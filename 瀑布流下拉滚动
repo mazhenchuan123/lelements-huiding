@@ -1,0 +1,52 @@
+import Masonry from 'masonry-layout'//瀑布流
+import InfiniteScroll from 'react-infinite-scroller' //下拉滚动
+```
+//滚动事件
+  loadFunc = (page = 1) => {
+    const { data, count } = this.state
+    if(count && data.length >= count) {
+      return false
+    }
+    axios.get('https://restapi.amap.com/v3/place/text', 
+        {
+          params:{ 
+            key:'ada574dcfc85ea2a35fac4d3323f6667',
+            keywords:"美食",
+            city:"北京",
+            page,
+            offset:20,
+          }
+        }
+      )
+    .then(res => {
+      console.log(res)
+      this.setState({
+        data: [...data, ...res.data.pois],
+        count: res.count,
+      }, () => {
+      //图片加载事件
+        this.images()
+      })
+    })
+    .catch(err => console.log(err))
+  }
+```
+```
+<InfiniteScroll
+          initialLoad={false}
+          pageStart={1}
+          loadMore={this.loadFunc}
+          useWindow={false}
+          hasMore={true}
+          loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+          {
+            this.state.date.map((v, k) => {
+              return (
+                <div style={{ height: 200 }} key={k}>
+                  <li>{v.address}</li>
+                </div>
+              )
+            })
+          }
+        </InfiniteScroll>
