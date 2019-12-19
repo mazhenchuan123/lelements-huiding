@@ -1,4 +1,8 @@
-数据持久化
+<Provider store={store}>
+  	<PersistGate persistor={persistStore(store)}>
+   	</PersistGate>
+ </Provider >
+//数据持久化
 
 import { createStore, compose, applyMiddleware } from'redux'
 
