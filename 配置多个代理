@@ -1,0 +1,15 @@
+//必须在src文件夹下，
+//文件名必须是setupProxy.js
+const proxy = require('http-proxy-middleware');
+
+module.exports = function(app) {
+    app.use(
+    //api自己设定的
+        proxy('/api', { 
+            target: 'http://www.suming9266.top', 
+            changeOrigin:true,
+            pathRewrite:{
+                '^/api':''
+            }
+        }));
+};
