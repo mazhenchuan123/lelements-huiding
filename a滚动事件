@@ -1,0 +1,11 @@
+//写在components钩子函数里面
+
+scroll = () => {
+    let home = document.querySelector('section')
+    // console.log(home.scrollTop)
+    if (home.scrollTop > 50) {
+      document.querySelector('header').style.background = "linear-gradient(rgb(235, 22, 37) 0%, rgba(255, 255, 255, 0) 100%)"
+    } else {
+      document.querySelector('header').style.background = "rgba(255, 255, 255, 0)"
+    }
+  }
