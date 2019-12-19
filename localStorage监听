@@ -1,0 +1,41 @@
+简单介绍一下；
+    也就是说一个页面改变localStorage的值，在另一个页面不用刷新也能改变localStorage的值
+    
+    
+constructor(props) {
+    super(props)
+    this.state = {
+      name:''
+    }
+    window.addEventListener("storage", e => {
+      const { newValue, oldValue } = e
+      console.log(e)
+      this.setState({
+        name:newValue?newValue:localStorage.getItem('arr')
+      })
+    })
+  }
+constructor(props) {
+    super(props)
+    this.state = {
+      name:1,
+      username:"小白"
+    }
+    localStorage.setItem("arr",this.state.username)
+  }
+  changes = () => {
+    this.setState({
+      username:"小明"
+    },() => {
+      localStorage.setItem("arr",this.state.username)
+    })
+  }
+  render() {
+    return (
+      <div className="rig2">
+        
+        <button onClick={this.changes}>
+        {this.state.username}</button>
+      </div>
+    )
+  }
