@@ -1,0 +1,40 @@
+//页面
+import React, { Component } from 'react'
+
+export default class extends Component {
+    constructor(props) {
+        super(props)
+        // 每次进入页面第一次输出的数据
+        console.log(props.match.params.cid,'------')
+    }
+    componentWillReceiveProps( nextProps) {
+        //非第一次进入页面的数据
+        if(this.props.match.params.cid !== nextProps.match.params.cid){
+            //判断上一次的路径与这次的路径是否相等
+            console.log(nextProps.match.params.cid,'////////')
+        }
+        
+    }
+  render() {
+    return (
+      <>
+        login
+      </>
+    )
+  }
+}
+
+//路由组件
+ <Router>
+        <ul>
+            <li><Link to="/login/111">Login1</Link></li>
+            <li><Link to="/login/222">Login2</Link></li>
+            <li><Link to="/">Home</Link></li>
+        </ul>
+        <Switch>
+          <Route path="/login/:cid" component={Login} />
+          //可以解决如果没有cid的值页面非正常显示
+          <Route path="/login/" component={Login} />
+          <Route path="/" component={Home}/>
+        </Switch>
+    </Router>
