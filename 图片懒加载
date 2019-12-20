@@ -1,5 +1,51 @@
-import LazyLoad from 'react-lazyload';//引入
-//scrollContainer如果不是windom的话要加载这个属性，监听父元素
-<LazyLoad scrollContainer=".ble" height={-50} overflow={true}>
-    <img src={v.photos[0].url} style={{ width: 200, height: 'auto' }} />
- </LazyLoad>
+import React, { Component } from 'react'
+import { Rate } from 'antd';
+import axios from 'axios';
+import qs from 'qs'
+import InfiniteScroll from 'react-infinite-scroller';
+import LazyLoad from 'react-lazyload';
+
+//内部state
+constructor(props) {
+    super(props)
+    this.state = {
+      date: [],
+      token:''
+    }
+    this.loadFunc(1)
+  }
+//请求数据函数
+loadFunc = page => {
+    axios.get(`https://restapi.amap.com/v3/place/text?key=9809f9a07caa8e5343d7d27487ff0be3&keywords=美食&city=北京&page=${page}`)
+      .then(res => {
+
+        this.setState({
+          date: [...this.state.date, ...res.data.pois]
+        }, () => console.log(this.state.date))
+      })
+  }
+
+
+//渲染
+<InfiniteScroll
+          initialLoad={false}
+          pageStart={1}
+          loadMore={this.loadFunc}
+          useWindow={false}
+          hasMore={true}
+          loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+          {
+            this.state.date.map((v, k) => {
+              return (
+                <div style={{ height: 200 }} key={k}>
+                  <li>{v.address}</li>
+                  {/* //scrollContainer 如果不是windom的话，监听外层盒子的名字 */}
+                  <LazyLoad scrollContainer=".ble" height={-50} overflow={true}>
+                    <img src={v.photos[0].url} style={{ width: 200, height: 'auto' }} />
+                  </LazyLoad>
+                </div>
+              )
+            })
+          }
+        </InfiniteScroll>
