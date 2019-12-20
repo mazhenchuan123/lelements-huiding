@@ -16,34 +16,26 @@ ReactDOM.render(
     </Provider >
     , document.getElementById('root')
 );
-//数据持久化
-
-import { createStore, compose, applyMiddleware } from'redux'
-
-import thunk from'redux-thunk'
-
-import { persistReducer } from'redux-persist'
-
-import storage from'redux-persist/lib/storage'
-
 import { createStore, compose, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import promise from 'redux-promise'
-import com from './reduce/index'//引入reduce/index文件，起别名
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
+import * as rdc from './reduce/index'//引入reduce/index文件，起别名
 const persistConfig = {
-	key: 'root',
-	storage,
-}
+    key: 'root',
+    storage,
+    stateReconciler: autoMergeLevel2,
+  }
 //数据持久化
-const persistedReducer = persistReducer(persistConfig, com)
+const persistedReducer = persistReducer(persistConfig, rdc.login)
 
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const store = createStore(
-	persistedReducer,
-	composeEnhancers(applyMiddleware(promise, thunk))
+    persistedReducer,
+    composeEnhancers(applyMiddleware(promise,thunk))
 )
 export { store }
 
@@ -76,22 +68,11 @@ export default function login (state = initlogin,action){
 //reduce抛出页面
 
 import login from'./login'
-
 import home from'./home'
-
-import { combineReducers } from'redux'
-
-const com = combineReducers({
-
-login,
-
-home, 
-
-goods
-
-})
-
-export default com
+export {
+    login,
+    home
+}
 
 
 //调用方法action
