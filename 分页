@@ -1,0 +1,78 @@
+import React, { Component } from 'react'
+import { Table, Divider, Tag } from 'antd';
+import { connect } from 'react-redux'
+import { fetchHome } from '../../actions/home'
+import './styles.less'
+export default 
+@connect(state=>{
+  const { home } = state
+  return{
+    home
+  }
+},{
+  fetchHome
+})
+class extends Component {
+    constructor(props) {
+        super(props)
+        this.state={
+            count:''
+        }
+        this.props.fetchHome({limit:10,page:1})
+
+    }
+    btn = (lis) => {
+      console.log(lis)
+      this.props.fetchHome({limit:10,page:lis})
+    }
+  render() {
+    
+    const { list, count  } = this.props.home.homeDate 
+    console.log(list)
+    const columns = [
+        {
+          title: '姓名',
+          dataIndex: 'id',
+          id: 'id'
+        },
+        {
+          title: 'Age',
+          dataIndex: 'title',
+          id: 'title',
+        },
+        {
+          title: 'Address',
+          dataIndex: 'thumb',
+          id: 'thumb',
+          render: thumb => (
+            <img src={thumb} />
+          ),
+        },
+        {
+          title: 'Action',
+          key: 'action',
+          render: (text, record) => (
+            <span>
+              <a>Edit</a>
+              <Divider type="vertical" />
+              <a>Delete</a>
+            </span>
+          ),
+        },
+      ];
+    return (
+      <>
+        <Table 
+          columns={columns} 
+          dataSource={list} 
+          rowKey={i => i.id} 
+          pagination={{
+            pageSize:10,
+            onChange:this.btn,
+            total:Number(count)
+          }}
+        />
+      </>
+    )
+  }
+}
