@@ -1,0 +1,6 @@
+//在src文件夹下创建services文件夹
+//在services文件夹下创建api.js
+//内容如下
+export default {
+    save:'/api/Home/Apis/listWithPage'//获取数据
+}
