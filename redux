@@ -1,28 +1,11 @@
 //index.js页面
-import React from 'react';
-import ReactDOM from 'react-dom';
-import 'antd/dist/antd.less'
-import { Provider } from 'react-redux'
-import { persistStore } from 'redux-persist'
-import { PersistGate } from 'redux-persist/lib/integration/react'
-import './index.less';
-import App from './router';
-import { store } from './store'
-ReactDOM.render(
-    <Provider store={store}>
-        <PersistGate persistor={persistStore(store)}>
-            <App />
-        </PersistGate>
-    </Provider >
-    , document.getElementById('root')
-);
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import promise from 'redux-promise'
 import thunk from 'redux-thunk'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
-import { login, home } from './reducer'
+import { login, home } from './reduce'
 
 // 我要对哪些state做数据持久化
 const rootPersistConfig = {
@@ -33,7 +16,10 @@ const rootPersistConfig = {
 
 // 单独为 某个 reduce 做数据持久化
 const myPersistReducer = combineReducers({
-  home,
+  home:persistReducer(
+    rootPersistConfig,
+    login
+  ),
   // persistReducer 做数据持久化
   login: persistReducer(
     rootPersistConfig,
@@ -51,25 +37,22 @@ const store = createStore(
 export { store }
 
 //reduce
-
-const initlogin = {
-    username:'',
-    password:'',
-    remember:false,
-    dataTable:[
-    ],
+ const inithome = {
+    username:[],
+    infoData:[],
+    user:[]
 }
 
 
-export default function login (state = initlogin,action){
-    // console.log(action)
+export default function home (state = inithome,action){
+    console.log(action,'-----------')
     switch (action.type) {
-        case 'LOGIN':
-            return { ...state,}
-        case 'SAVE':
-            return { ...state, ...action.payload}
-        case 'TABLE_DATA':
-            return { ...state, dataTable: action.payload }
+        case 'HOME':
+            return { ...state,username:action.payload}
+        case 'DATAS':
+            return { ...state,infoData:action.payload}
+        case 'GET':
+                return { ...state,user:action.payload}
         default:
             return state
     }
@@ -87,29 +70,27 @@ export {
 
 
 //调用方法action
-
-
 import request from '../utils/request'
 import {get} from '../utils/request'
-
-//login
-export function fetchLogin (options) {
+import qs from 'qs'
+import ax from '../services/api'
+//home
+export function fetchHome(options) {
     return {
-      type: 'LOGIN',
-      payload: request('/api/user/login', options),
-      
+      type: 'HOME',
+      payload: request(ax.homedata, qs.stringify(options)),
     }
   }
-export function remeber (options) {
-  // console.log(options)
+  export function usernameData(options) {
+    console.log(options,'++++++++++++')
     return {
-      type: 'SAVE',
-      payload:options
+      type: 'DATAS',
+      payload: options,
     }
   }
-export function getData () {
+  export function userGet(options) {
     return {
-      type: 'TABLE_DATA',
-      payload: get('/api/banner/list')
+      type: 'GET',
+      payload: get(ax.get,{params:options}),
     }
   }
