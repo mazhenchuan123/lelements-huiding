@@ -4,13 +4,15 @@ import promise from 'redux-promise'
 import thunk from 'redux-thunk'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+//可以做sessionStorage的数据持久化
+import storageSession from 'redux-persist/lib/storage/session'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import { login, home } from './reduce'
 
 // 我要对哪些state做数据持久化
 const rootPersistConfig = {
   key: 'root',
-  storage: storage,
+  storage: storage,//做sessionStorage的数据持久化吧storage的值改为storageSession
   stateReconciler: autoMergeLevel2,
 }
 
