@@ -1,0 +1,100 @@
+修改webpackrc为webpackrc.js,并更改内容
+export default {
+	publicPath: '/',
+
+	extraBabelPlugins: [
+		['import', { 'libraryName': 'antd', 'libraryDirectory': 'es', 'style': 'css' }]
+	],
+	alias: {
+		'@': `${__dirname}/src`,
+	},
+	proxy: {
+		'/aps': {
+			target: 'https://api.baxiaobu.com',
+			changeOrigin: true,
+			pathRewrite: {
+				'^/aps': '',
+			}
+		}
+	}
+}
+
+
+router.js文件改为
+import React from 'react'
+import { Router, Route, Switch } from 'dva/router'
+import dynamic from 'dva/dynamic' // 组件异步加载
+
+function RouterConfig({ history, app }) {
+  const Home = dynamic({
+    app,
+    // redux
+    models: () => [
+      import('@/models/home'),
+    ],
+    component: () => import('@/pages/home')
+  })
+
+  const Login = dynamic({
+    app,
+    models: () => [
+      import('@/models/login'),
+    ],
+    component: () => import('@/pages/login')
+  })
+
+  return (
+    <Router history={history}>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/" component={Home} />
+      </Switch>
+    </Router>
+  )
+}
+
+export default RouterConfig
+
+
+
+
+models文件夹下面写redux
+export default {
+    namespace: 'home',
+
+    state: {
+        name:"小明"
+    },
+
+    reducer: {
+        updateName (state, action) {
+            return { ...state, name:action.payload}
+        }
+    }
+}
+
+
+
+入口的index.js改为
+安装npm install histtory --save
+import dva from 'dva';
+import { createBrowserHistory } from 'history'
+import './index.css';
+
+// 1. Initialize
+const app = dva({
+    history: createBrowserHistory(),
+  })
+
+// 2. Plugins
+// app.use({});
+
+// 3. Model
+// app.model(require('./models/example').default);
+
+// 4. Router
+app.router(require('./router').default);
+
+// 5. Start
+app.start('#root');
+
