@@ -1,0 +1,38 @@
+// 原型链
+// prototype 对象 { toString: ...... }
+// Object.prototype
+
+// prototype 属性 这个输性是个对象 { constructor , __proto__ }
+// prototype.constructor === Name
+// prototype.__proto__
+
+function Shuiguo (params) {
+  
+}
+
+Shuiguo.prototype.type = '水果'
+
+const shui = new Shuiguo()
+
+// prototype === shui
+// 寄生组合式继承
+function Xigua () {
+  // 构造器
+}
+
+const xi = new Xigua()
+
+Xigua.prototype = shui
+
+console.log(xi.type)
+
+// 1. 创建一个 {} 2 运行构造器 Name() 3 Name内的this属性挂在到 {}上 
+// 4. prototype继承给name实例 5. 返回{}
+// const name = new Name()
+
+
+// 看这个对象是谁的实例
+// obj 是 Object 的实例
+// obj.__proto__ 往 Object.prototype
+// const obj = {}
+// console.log( obj.__proto__ === Object.prototype )
