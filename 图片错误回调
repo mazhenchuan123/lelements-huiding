@@ -1,0 +1,5 @@
+<img src="image.gif" onError={onError}>
+
+onError = e => {
+    e.target.setAttribute('src', defaultImg)
+  }
