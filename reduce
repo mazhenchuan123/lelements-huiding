@@ -5,5 +5,5 @@ const abc = arr.reduce((v0, v1) => {
   // { 1: 1, 2: 2, 3: 3 }
   v0[v1] = v1
    return v0
-}, {})
+}, {}) 
 console.log(abc)
